@@ -1,5 +1,6 @@
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local SoundService = game:GetService("SoundService")
+local RunService = game:GetService("RunService")
 local user = UserSettings()
 local Selection = game:GetService("Selection")
 
@@ -7,40 +8,85 @@ local toolbar = plugin:CreateToolbar("Strict Scripts")
 local createStrict = toolbar:CreateButton("Strict Generator", "Generate", "rbxassetid://4458901886")
 local createStrictDestroy = toolbar:CreateButton("Destroy", "Destroy", "rbxassetid://149185724")
 
+local IsStudioClosed = script.Parent.Configuration:WaitForChild("IsStudioClosed")
+
+
 local function onStrictFolder()
 	local Load = script:WaitForChild("LoadUpPlugin")
 	local RandomLoad = math.random(6, 12)
 	
 	local SoundConfig = script.Parent:WaitForChild("Sounds")
 	local Insert = SoundConfig:FindFirstChild("InsertSound"):Clone()
-	Insert.Parent = SoundService
 	
 	local folder = Instance.new("Folder")
 	folder.Name = "LuauStricts"
+	
+	local fullCodeFolder = Instance.new("Folder")
+	local commentCodeFolder = Instance.new("Folder")
+	
+	fullCodeFolder.Name = "FullCodedStricts"
+	commentCodeFolder.Name = "UncodedStricts"
+	
+	Insert.Parent = SoundService
 	
 	local strict = Instance.new("Script")
 	strict.Source = "--!strict\n\nlocal foobar\nfoobar = time()\n\nlocal tab = {'foo', 'bar', 'foobar'}\n\nlocal function foo()\n\tlocal t = tick()\n\tprint(foobar)\n\twarn(_VERSION)\n\n\ttable.insert(tab, 'noob')\n\n\tfor index, value in ipairs(tab) do\n\tprint(index, value)\n\tend\nend\n\nlocal function bar()\n\tlocal t = tick()\n\tprint(foobar)\n\twarn(_G)\n\n\ttable.insert(tab, 'game.Workspace.Name')\n\n\tfor index, value in ipairs(tab) do \n\t\print(index, value)\n\tend\nend\n\nfoo()\nbar()\n"
 	strict.Name = "strict"
 	
+	local commentStrict = Instance.new("Script")
+	commentStrict.Source = "--!strict"
+	commentStrict.Name = "uncodedstrict"
+	
 	local nonstrict = Instance.new("Script")
 	nonstrict.Source = "--!nonstrict\n\nlocal foobar\nfoobar = time()\n\nlocal tab = {'foo', 'bar', 'foobar'}\n\nlocal function foo()\n\tlocal t = tick()\n\tprint(foobar)\n\twarn(_VERSION)\n\n\ttable.insert(tab, 'noob')\n\n\tfor index, value in ipairs(tab) do\n\tprint(index, value)\n\tend\nend\n\nlocal function bar()\n\tlocal t = tick()\n\tprint(foobar)\n\twarn(_G)\n\n\ttable.insert(tab, 'game.Workspace.Name')\n\n\tfor index, value in ipairs(tab) do \n\t\print(index, value)\n\tend\nend\n\nfoo()\nbar()\n"
 	nonstrict.Name = "nonstrict"
+	
+	local commentNon = Instance.new("Script")
+	commentNon.Source = "--!nonstrict"
+	commentNon.Name = "uncodednonstrict"
 	
 	local nocheck = Instance.new("Script")
 	nocheck.Source = "--!nocheck\n\nlocal foobar\nfoobar = time()\n\nlocal tab = {'foo', 'bar', 'foobar'}\n\nlocal function foo()\n\tlocal t = tick()\n\tprint(foobar)\n\twarn(_VERSION)\n\n\ttable.insert(tab, 'noob')\n\n\tfor index, value in ipairs(tab) do\n\tprint(index, value)\n\tend\nend\n\nlocal function bar()\n\tlocal t = tick()\n\tprint(foobar)\n\twarn(_G)\n\n\ttable.insert(tab, 'game.Workspace.Name')\n\n\tfor index, value in ipairs(tab) do \n\t\print(index, value)\n\tend\nend\n\nfoo()\nbar()\n"
 	nocheck.Name = "nocheck"
 	
-	while wait(0.2) do
+	local commentNoCheck = Instance.new("Script")
+	commentNoCheck.Source = "--!nocheck"
+	commentNoCheck.Name = "uncodednocheck"
+	
+	local nolint = Instance.new("Script")
+	nolint.Source = "--!nolint\n\nlocal foobar\nfoobar = time()\n\nlocal tab = {'foo', 'bar', 'foobar'}\n\nlocal function foo()\n\tlocal t = tick()\n\tprint(foobar)\n\twarn(_VERSION)\n\n\ttable.insert(tab, 'noob')\n\n\tfor index, value in ipairs(tab) do\n\tprint(index, value)\n\tend\nend\n\nlocal function bar()\n\tlocal t = tick()\n\tprint(foobar)\n\twarn(_G)\n\n\ttable.insert(tab, 'game.Workspace.Name')\n\n\tfor index, value in ipairs(tab) do \n\t\print(index, value)\n\tend\nend\n\nfoo()\nbar()\n"
+	nolint.Name = "nocheck"
+	
+	local commentNoLint = Instance.new("Script")
+	commentNoLint.Source = "--!nolint"
+	commentNoLint.Name = "uncodednolint"
+	
+	while wait(0.1) do
 		Load.Value += 1
 		warn("Loading: " .. Load.Value .. ".")
 		
 		if Load.Value == RandomLoad then
-			assert(RandomLoad, "ERR0R")
+			assert(RandomLoad, string.upper("error"))
 			folder.Parent = game:GetService("ServerScriptService")
-			wait(1)
-			nocheck.Parent = folder
-			nonstrict.Parent = folder
-			strict.Parent = folder
+			
+			fullCodeFolder.Parent = folder
+			commentCodeFolder.Parent = folder
+			
+			Load.Value = 0
+			nocheck.Parent = fullCodeFolder
+			nonstrict.Parent = fullCodeFolder
+			nolint.Parent = fullCodeFolder
+			strict.Parent = fullCodeFolder
+			
+			commentStrict.Parent = commentCodeFolder
+			commentNon.Parent = commentCodeFolder
+			commentNoCheck.Parent = commentCodeFolder
+			commentNoLint.Parent = commentCodeFolder
+			
+			if Load.Value > 12 then
+				break
+			end
+			
 			break
 		end
 	end
@@ -56,14 +102,55 @@ end
 local function onDestroyFolder()
 	local Destroy = script.Parent:WaitForChild("Sounds")
 	local DestroyClone = Destroy.DestroySound:Clone()
+	local folder = game.ServerScriptService:FindFirstChild("LuauStricts")
 	
-	local folder = game.ServerScriptService:WaitForChild("LuauStricts")
-	
+	folder:Destroy()
 	SoundService:PlayLocalSound(DestroyClone)
+	
+	if folder.Parent ~= nil then
+		onStrictFolder()
+	end
+	
+	folder.AncestryChanged:Connect(function(_, parent)
+		if not parent then
+			print(folder.Parent)
+			folder.Parent = game:GetService("ServerScriptService")
+		else
+			warn("Folder hasn't changed it's ancestor")
+		end
+	end)
 end
 
-delay(1, function()
-	onDestroyFolder()
+game.Loaded:Connect(function()
+	assert(game.Loaded, "not loaded")
+	
+	if not game.Loaded then
+		game.Loaded:Wait()
+		
+		if game.Loaded then
+			print("Game has loaded!")
+		end
+	end
+end)
+
+game:BindToClose(function()
+	local co = coroutine.wrap(function()
+		local Audio = script.Parent:WaitForChild("Sounds")
+		local onCloseClone = Audio.onClose:Clone()
+
+		if RunService:IsStudio() then
+			print(coroutine.isyieldable())
+			return onCloseClone:Play()
+		elseif RunService:IsClient() and RunService:IsServer() then
+			warn(string.lower("What"))
+			return error(string.upper("should be studio; running on server and client"))
+		end
+
+		RunService.PostSimulation:Wait()
+
+		warn("closed")
+	end)
+	warn("closed")
 end)
 
 createStrict.Click:Connect(onStrictFolder)
