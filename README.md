@@ -1,4 +1,4 @@
-# LuauStrictGenerator
+# Luau-Stricerator
 Generates variety of Luau type checkers, see: https://devforum.roblox.com/t/luau-type-checking-release/878947
 
 Generate different types of scripts (set-up by me, future by users) from having ``--strict`` or having a full-on code with ``foo()`` and ``bar()``
