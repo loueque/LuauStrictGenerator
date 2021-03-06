@@ -63,6 +63,10 @@ Notes from me (loueque):
 
 * Hi. :)
 
+---
+
+> You're free to take the source code (DO NOT CREDIT YOURSELF) and modify it you want, a small project for my time as a developer.
+
 Want a suggestion? File a Pull request!
 Fix a bug in the git? File an issue!
 
