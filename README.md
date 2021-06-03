@@ -6,46 +6,29 @@ Generate different types of scripts (set-up by me, future by users) from having 
 Some examples of this code are:
 
 ```lua
---!nonstrict
+--!strict
 
-local foobar
-foobar = time()
+type x = boolean
+type y = string
+type z = any
 
-local tab = {'foo', 'bar', 'foobar'}
+function foo(a: boolean, b: boolean)
+	local a:x = true
+	local b:y = 'hello'
 
-local function foo()
-	local t = tick()
-	print(foobar)
-	warn(_VERSION)
-
-	table.insert(tab, 'noob')
-
-	for index, value in ipairs(tab) do
-	print(index, value)
-	end
+	return warn(a, b)
 end
 
-local function bar()
-	local t = tick()
-	print(foobar)
-	warn(_G)
+function bar(c: any)
+	local c:z = nil
 
-	table.insert(tab, 'game.Workspace.Name')
-
-	for index, value in ipairs(tab) do 
-	print(index, value)
-	end
+	return c
 end
-
-foo()
-bar()
 ```
 Un-coded ones (they're named with 'uncoded') have only comments, for preview:
 
 ```lua
 --strict
-
-print(string.upper("that's pretty much it"))
 ```
 
 ---
@@ -53,10 +36,7 @@ print(string.upper("that's pretty much it"))
 Future plans for plugin-users and/or contributors:
 
 * Configure your code with '--!strict' and '--!nonstrict'
-* Better compatibility for spawning (spawn())! 🎨
-* Cleaner way to create instances (Janitor?) 🤔
 * Allow users to customize their code + preference.
-* Faster loading... :zap:
 * ..and more! :smile:
 
 Notes from me (loueque):
@@ -68,5 +48,4 @@ Notes from me (loueque):
 Want a suggestion? File a Pull request!
 Fix a bug in the git? File an issue!
 
-Provided version: 0.124
-Creator version: 0.124b (DEBUG)
+Provided version: v1.5
